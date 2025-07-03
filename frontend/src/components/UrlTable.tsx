@@ -32,7 +32,15 @@ export const UrlTable = ({ data, onDelete, onUrlClick, isLoading}: UrlTableProps
       key: 'actions',
       render: (_: any, record: UrlItem) => (
         <Space>
-          <Button danger onClick={() => onDelete(record)}>Delete</Button>
+          <Button 
+            danger 
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(record);
+            }}
+          >
+            Delete
+          </Button>
         </Space>
       ),
     },
@@ -44,13 +52,9 @@ export const UrlTable = ({ data, onDelete, onUrlClick, isLoading}: UrlTableProps
       dataSource={data} 
       rowKey="shortCode"
       loading={isLoading}
-      onRow={(item)=>(
-        {
-          onClick: () => {
-            onUrlClick(item)
-          }
-        }
-      )}
+      onRow={(item)=>({
+        onClick: () => onUrlClick(item)
+      })}
     />
   );
 };
