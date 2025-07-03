@@ -1,90 +1,194 @@
 {
-    "info": {
-      "name": "URL Shortener API",
-      "_postman_id": "d1d5e4ab-cd4e-4c3a-8b31-123456789abc",
-      "description": "API collection for URL Shortener (without redirect endpoint)",
-      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-    },
-    "item": [
-      {
-        "name": "Shorten URL",
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
+  "info": {
+    "name": "NestJS URL Shortener",
+    "_postman_id": "b1f6e702-4ee1-4e6b-b502-abc123def456",
+    "description": "API collection for NestJS URL shortener service with auth.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            {
-              "key": "Authorization",
-              "value": "Bearer {{access_token}}",
-              "description": "Optional: include JWT token if logged in"
-            },
-            {
-              "key": "x-guest-id",
-              "value": "{{guest_id}}",
-              "description": "Optional: guest ID header if not logged in"
+            "url": {
+              "raw": "{{BASE_URL}}/auth/register",
+              "host": ["{{BASE_URL}}"],
+              "path": ["auth", "register"]
             }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\n  \"originalUrl\": \"https://example.com/some/long/url\"\n}"
           },
-          "url": {
-            "raw": "{{base_url}}/urls/shorten",
-            "host": [
-              "{{base_url}}"
-            ],
-            "path": [
-              "urls",
-              "shorten"
-            ]
-          }
+          "response": []
         },
-        "response": []
-      },
-      {
-        "name": "Get URLs",
-        "request": {
-          "method": "GET",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "Bearer {{access_token}}",
-              "description": "Optional: include JWT token if logged in"
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            {
-              "key": "x-guest-id",
-              "value": "{{guest_id}}",
-              "description": "Optional: guest ID header if not logged in"
+            "url": {
+              "raw": "{{BASE_URL}}/auth/login",
+              "host": ["{{BASE_URL}}"],
+              "path": ["auth", "login"]
             }
-          ],
-          "url": {
-            "raw": "{{base_url}}/urls",
-            "host": [
-              "{{base_url}}"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "URLs",
+      "item": [
+        {
+          "name": "Shorten URL (authenticated)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              }
             ],
-            "path": [
-              "urls"
-            ]
-          }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"originalUrl\": \"https://google.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/urls/shorten",
+              "host": ["{{BASE_URL}}"],
+              "path": ["urls", "shorten"]
+            }
+          },
+          "response": []
         },
-        "response": []
-      }
-    ],
-    "variable": [
-      {
-        "key": "base_url",
-        "value": "http://localhost:3000"
-      },
-      {
-        "key": "access_token",
-        "value": ""
-      },
-      {
-        "key": "guest_id",
-        "value": ""
-      }
-    ]
-  }
-  
+        {
+          "name": "Shorten URL (guest)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-guest-id",
+                "value": "guest-abc123",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"originalUrl\": \"https://example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/urls/shorten",
+              "host": ["{{BASE_URL}}"],
+              "path": ["urls", "shorten"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get URLs (authenticated)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/urls",
+              "host": ["{{BASE_URL}}"],
+              "path": ["urls"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get URLs (guest)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-guest-id",
+                "value": "guest-abc123",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/urls",
+              "host": ["{{BASE_URL}}"],
+              "path": ["urls"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Increase Click Count",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/urls/1/increase-click-count",
+              "host": ["{{BASE_URL}}"],
+              "path": ["urls", "1", "increase-click-count"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete URL",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/urls/short123",
+              "host": ["{{BASE_URL}}"],
+              "path": ["urls", "short123"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "JWT_TOKEN",
+      "value": ""
+    }
+  ]
+}
